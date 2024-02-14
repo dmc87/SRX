@@ -69,25 +69,15 @@ set interfaces lo0 unit 0 family inet filter input protect-re
 set interfaces lo0 unit 0 family inet address 192.168.100.1/32
 set interfaces vlan unit 10 description "VLAN10 L3 interface"
 set interfaces vlan unit 10 family inet address 192.168.0.1/24
-set snmp name Router-1
-set snmp description "Router-1 SRX100b firewall/router"
-set snmp location "Building A, Room B, Desk C"
-set snmp contact "Operations: (0X) XXXX XXXX"
-set snmp client-list SNMP-CLIENTS 192.168.0.0/24
-set snmp community public authorization read-only
-set snmp community public client-list-name SNMP-CLINETS
-set snmp health-monitor
 set routing-options rib inet.0 static route 0.0.0.0/0 next-hop 10.0.0.1
 set routing-options router-id 192.168.100.1
 set protocols lldp interface all
 set protocols rstp interface all edge
 set policy-options prefix-list ipv4-interfaces apply-path "interfaces <*> unit <*> family inet address <*>"
 set policy-options prefix-list ntp-servers apply-path "system ntp server <*>"
-set policy-options prefix-list snmp-servers apply-path "snmp community <*> clients <*>"
 set policy-options prefix-list localhost 127.0.0.1/32
 set policy-options prefix-list dns-servers apply-path "system name-server <*>"
 set policy-options prefix-list loopback apply-path "interfaces lo0 unit <*> family inet address <*>"
-set policy-options prefix-list gre-over-secure-tunnels apply-path "interfaces st0 unit <*> family inet address <*>"
 set policy-options prefix-list private-ipv4 192.168.0.0/16
 set security alg dns disable
 set security alg ftp disable
@@ -179,12 +169,6 @@ set firewall family inet filter protect-re term allow-ssh from destination-port 
 set firewall family inet filter protect-re term allow-ssh then policer limit-1m
 set firewall family inet filter protect-re term allow-ssh then count allow-ssh
 set firewall family inet filter protect-re term allow-ssh then accept
-set firewall family inet filter protect-re term allow-snmp from source-prefix-list snmp-servers
-set firewall family inet filter protect-re term allow-snmp from protocol udp
-set firewall family inet filter protect-re term allow-snmp from destination-port snmp
-set firewall family inet filter protect-re term allow-snmp then policer limit-1m
-set firewall family inet filter protect-re term allow-snmp then count allow-snmp
-set firewall family inet filter protect-re term allow-snmp then accept
 set firewall family inet filter protect-re term allow-ntp from source-prefix-list ntp-servers
 set firewall family inet filter protect-re term allow-ntp from source-prefix-list localhost
 set firewall family inet filter protect-re term allow-ntp from protocol udp
@@ -211,9 +195,7 @@ set firewall family inet filter protect-re term allow-traceroute then policer li
 set firewall family inet filter protect-re term allow-traceroute then count allow-traceroute
 set firewall family inet filter protect-re term allow-traceroute then accept
 set firewall family inet filter protect-re term tcp-established from protocol tcp
-set firewall family inet filter protect-re term tcp-established from source-port ssh
 set firewall family inet filter protect-re term tcp-established from tcp-established
-set firewall family inet filter protect-re term tcp-established then policer limit-10m
 set firewall family inet filter protect-re term tcp-established then count tcp-established
 set firewall family inet filter protect-re term tcp-established then accept
 set firewall family inet filter protect-re term allow-dns from source-prefix-list dns-servers
@@ -238,9 +220,6 @@ set firewall family inet filter protect-re term default-deny then discard
 set firewall policer limit-10m if-exceeding bandwidth-limit 10m
 set firewall policer limit-10m if-exceeding burst-size-limit 625k
 set firewall policer limit-10m then discard
-set firewall policer limit-3m if-exceeding bandwidth-limit 3m
-set firewall policer limit-3m if-exceeding burst-size-limit 15k
-set firewall policer limit-3m then discard
 set firewall policer limit-1m if-exceeding bandwidth-limit 1m
 set firewall policer limit-1m if-exceeding burst-size-limit 15k
 set firewall policer limit-1m then discard
@@ -250,17 +229,6 @@ set firewall policer limit-100k then discard
 set firewall policer limit-32k if-exceeding bandwidth-limit 32k
 set firewall policer limit-32k if-exceeding burst-size-limit 15k
 set firewall policer limit-32k then discard
-set services rpm probe Router-1-to-WAN test WAN probe-type icmp-ping
-set services rpm probe Router-1-to-WAN test WAN target address 8.8.8.8
-set services rpm probe Router-1-to-WAN test WAN probe-count 15
-set services rpm probe Router-1-to-WAN test WAN probe-interval 1
-set services rpm probe Router-1-to-WAN test WAN test-interval 300
-set services rpm probe Router-1-to-WAN test WAN hardware-timestamp
-set services rpm probe Router-1-to-WAN test WAN one-way-hardware-timestamp
-set applications application tcp80 protocol tcp
-set applications application tcp80 destination-port 80
-set applications application tcp22 protocol tcp
-set applications application tcp22 destination-port 22
 set vlans VLAN10 description "User data VLAN"
 set vlans VLAN10 vlan-id 10
 set vlans VLAN10 l3-interface vlan.10
