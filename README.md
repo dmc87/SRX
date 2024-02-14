@@ -2,6 +2,7 @@
 I've made available a collection of Juniper SRX baseline configurations for various uses. 
 
 **SRX100b-12.1-NBN-baseline** - This is a baseline configuration that could be used for a Juniper SRX100 using Junos v12.1 connected to an NBN modem/gateway.
+
 **Parameters:**
 1. You can change the hostname to whatever you like.
 2. The router is configured to accept a DHCP address from interface fe-0/0/0. You can plug it into an NBN FTTP UNI-D connection or another gateway, but be mindful of the gateway network addresses. If it conflicts with any addresses in this config, you will have issues.
