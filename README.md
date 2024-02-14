@@ -26,6 +26,7 @@ I've made available a collection of Juniper SRX baseline configurations for vari
 7. SNMP read-only accessible to the 192.168.0.0/24 range.
 8. LLDP and RSTP enabled.
 9. A basic IDS.
-10. An RPM probe which checks for internet connectivity.
+10. Zone based firewall.
+11. An RPM probe which checks for internet connectivity.
 
 You will need to change some details on this, but otherwise this is a solid baseline configuration.
