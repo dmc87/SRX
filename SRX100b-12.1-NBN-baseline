@@ -1,0 +1,266 @@
+set system host-name Router-1
+set system auto-snapshot
+set system time-zone Australia/Sydney
+set system internet-options tcp-drop-synfin-set
+set system internet-options no-tcp-reset drop-all-tcp
+set system ports console log-out-on-disconnect
+set system root-authentication encrypted-password "$1$mA10yjE9$VYTF59Yes2ieGDLA8cEjv/"
+set system name-server 9.9.9.9
+set system name-server 149.112.112.112
+set system name-resolution no-resolve-on-input
+set system login message "WARNING:\n This system is provided for business purposes by authorized users only\n Users of Company resources, including computers, communications\n equipment, and associated services provided by these resources (e.g.,\n Internet, electronic mail, facsimile, voice mail, hardcopy) are to use\n the Company resources for Company business purposes only. The Company\n reserves the right to monitor usage of all resources for auditing purposes\n and whenever deemed necessary by Company. Anyone using this system\n expressly consents to such monitoring. Unauthorized users will be prosecuted\n to the fullest extent of the law."
+set system login retry-options backoff-factor 5
+set system login retry-options minimum-time 20
+set system login user admin uid 2003
+set system login user admin class super-user
+set system login user admin authentication encrypted-password "$1$PriB9Bnm$6psYuRUwUavTBlQMk9qcp0"
+set system services ssh root-login deny
+set system services ssh no-tcp-forwarding
+set system services ssh protocol-version v2
+set system services ssh ciphers aes256-cbc
+set system services ssh macs hmac-sha2-512
+set system services ssh macs hmac-sha2-256
+set system services ssh key-exchange ecdh-sha2-nistp521
+set system services ssh client-alive-count-max 3
+set system services ssh client-alive-interval 60
+set system services ssh hostkey-algorithm ssh-rsa
+set system services ssh connection-limit 3
+set system services ssh rate-limit 3
+set system services dhcp pool 192.168.0.0/24 address-range low 192.168.0.5
+set system services dhcp pool 192.168.0.0/24 address-range high 192.168.0.254
+set system services dhcp pool 192.168.0.0/24 name-server 9.9.9.9
+set system services dhcp pool 192.168.0.0/24 router 192.168.0.1
+set system services dhcp pool 192.168.0.0/24 propagate-settings vlan.10
+set system syslog archive size 100k
+set system syslog archive files 3
+set system syslog user * any emergency
+set system syslog file messages any info
+set system syslog file messages authorization none
+set system syslog file messages interactive-commands any
+set system syslog file messages explicit-priority
+set system syslog file interactive-commands interactive-commands error
+set system syslog file kmd-logs daemon info
+set system syslog file kmd-logs match KMD
+set system syslog file audit authorization any
+set system syslog file audit interactive-commands any
+set system syslog file audit explicit-priority
+set system syslog file User-Auth authorization any
+set system syslog file User-Auth interactive-commands any
+set system syslog file User-Auth explicit-priority
+set system syslog file process daemon any
+set system syslog file process explicit-priority
+set system syslog file firewall firewall any
+set system syslog time-format year
+set system syslog time-format millisecond
+set system max-configurations-on-flash 49
+set system max-configuration-rollbacks 49
+set system ntp server 129.6.15.27
+set system ntp server 129.6.15.28
+set system ntp server 129.6.15.29
+set system ntp server 129.6.15.30
+set interfaces interface-range VLAN10-MEMBERS description "VLAN10 user"
+set interfaces interface-range VLAN10-MEMBERS member-range fe-0/0/1 to fe-0/0/7
+set interfaces interface-range VLAN10-MEMBERS unit 0 family ethernet-switching port-mode access
+set interfaces interface-range VLAN10-MEMBERS unit 0 family ethernet-switching vlan members VLAN10
+set interfaces fe-0/0/0 description "WAN uplink to NBN gateway"
+set interfaces fe-0/0/0 unit 0 family inet dhcp
+set interfaces lo0 unit 0 description "Loopback"
+set interfaces lo0 unit 0 family inet filter input protect-re
+set interfaces lo0 unit 0 family inet address 192.168.100.1/32
+set interfaces vlan unit 10 description "VLAN10 L3 interface"
+set interfaces vlan unit 10 family inet address 192.168.0.1/24
+set snmp name Router-1
+set snmp description "Router-1 SRX100b firewall/router"
+set snmp location "Building A, Room B, Desk C"
+set snmp contact "Operations: (0X) XXXX XXXX"
+set snmp client-list SNMP-CLIENTS 192.168.0.0/24
+set snmp community public authorization read-only
+set snmp community public client-list-name SNMP-CLINETS
+set snmp health-monitor
+set routing-options rib inet.0 static route 0.0.0.0/0 next-hop 10.0.0.1
+set routing-options router-id 192.168.100.1
+set protocols lldp interface all
+set protocols rstp interface all edge
+set policy-options prefix-list ipv4-interfaces apply-path "interfaces <*> unit <*> family inet address <*>"
+set policy-options prefix-list ntp-servers apply-path "system ntp server <*>"
+set policy-options prefix-list snmp-servers apply-path "snmp community <*> clients <*>"
+set policy-options prefix-list localhost 127.0.0.1/32
+set policy-options prefix-list dns-servers apply-path "system name-server <*>"
+set policy-options prefix-list loopback apply-path "interfaces lo0 unit <*> family inet address <*>"
+set policy-options prefix-list gre-over-secure-tunnels apply-path "interfaces st0 unit <*> family inet address <*>"
+set policy-options prefix-list private-ipv4 192.168.0.0/16
+set security alg dns disable
+set security alg ftp disable
+set security alg h323 disable
+set security alg mgcp disable
+set security alg msrpc disable
+set security alg sunrpc disable
+set security alg rsh disable
+set security alg rtsp disable
+set security alg sccp disable
+set security alg sip disable
+set security alg sql disable
+set security alg talk disable
+set security alg tftp disable
+set security alg pptp disable
+set security screen ids-option 1000-icmp-flood icmp flood threshold 200
+set security screen ids-option WAN description "IDS Screen"
+set security screen ids-option WAN alarm-without-drop
+set security screen ids-option WAN icmp ip-sweep threshold 1000000
+set security screen ids-option WAN icmp fragment
+set security screen ids-option WAN icmp large
+set security screen ids-option WAN icmp flood threshold 200
+set security screen ids-option WAN icmp ping-death
+set security screen ids-option WAN ip bad-option
+set security screen ids-option WAN ip record-route-option
+set security screen ids-option WAN ip timestamp-option
+set security screen ids-option WAN ip security-option
+set security screen ids-option WAN ip stream-option
+set security screen ids-option WAN ip spoofing
+set security screen ids-option WAN ip source-route-option
+set security screen ids-option WAN ip strict-source-route-option
+set security screen ids-option WAN ip unknown-protocol
+set security screen ids-option WAN ip tear-drop
+set security screen ids-option WAN tcp syn-fin
+set security screen ids-option WAN tcp fin-no-ack
+set security screen ids-option WAN tcp tcp-no-flag
+set security screen ids-option WAN tcp syn-frag
+set security screen ids-option WAN tcp port-scan threshold 1000000
+set security screen ids-option WAN tcp syn-flood source-threshold 200
+set security screen ids-option WAN tcp land
+set security screen ids-option WAN tcp winnuke
+set security screen ids-option WAN tcp tcp-sweep threshold 1000000
+set security screen ids-option WAN udp flood threshold 2048
+set security screen ids-option WAN udp udp-sweep threshold 1000000
+set security screen ids-option WAN limit-session source-ip-based 1000
+set security nat source pool GATEWAY address 10.0.0.1/32
+set security nat source rule-set source-nat from routing-instance default
+set security nat source rule-set source-nat to zone WAN
+set security nat source rule-set source-nat rule PERMIT-ALL match source-address 0.0.0.0/0
+set security nat source rule-set source-nat rule PERMIT-ALL match destination-address 0.0.0.0/0
+set security nat source rule-set source-nat rule PERMIT-ALL then source-nat pool GATEWAY
+set security policies from-zone LAN to-zone WAN policy LAN-to-WAN description "Permit all LAN to WAN traffic by default"
+set security policies from-zone LAN to-zone WAN policy LAN-to-WAN match source-address any
+set security policies from-zone LAN to-zone WAN policy LAN-to-WAN match destination-address any
+set security policies from-zone LAN to-zone WAN policy LAN-to-WAN match application any
+set security policies from-zone LAN to-zone WAN policy LAN-to-WAN then permit
+set security policies from-zone LAN to-zone LAN policy LAN-to-LAN description "Permit all intra-zone LAN to LAN traffic by default"
+set security policies from-zone LAN to-zone LAN policy LAN-to-LAN match source-address any
+set security policies from-zone LAN to-zone LAN policy LAN-to-LAN match destination-address any
+set security policies from-zone LAN to-zone LAN policy LAN-to-LAN match application any
+set security policies from-zone LAN to-zone LAN policy LAN-to-LAN then permit
+set security policies from-zone WAN to-zone LAN policy WAN-to-LAN description "Deny all WAN to LAN traffic by default"
+set security policies from-zone WAN to-zone LAN policy WAN-to-LAN match source-address any
+set security policies from-zone WAN to-zone LAN policy WAN-to-LAN match destination-address any
+set security policies from-zone WAN to-zone LAN policy WAN-to-LAN match application any
+set security policies from-zone WAN to-zone LAN policy WAN-to-LAN then deny
+set security policies from-zone WAN to-zone WAN policy WAN-to-WAN description "Permit all intra-zone WAN to WAN traffic by default"
+set security policies from-zone WAN to-zone WAN policy WAN-to-WAN match source-address any
+set security policies from-zone WAN to-zone WAN policy WAN-to-WAN match destination-address any
+set security policies from-zone WAN to-zone WAN policy WAN-to-WAN match application any
+set security policies from-zone WAN to-zone WAN policy WAN-to-WAN then permit
+set security zones security-zone LAN description "LAN zone. Interfaces exposed to internal network traffic"
+set security zones security-zone LAN interfaces vlan.10 host-inbound-traffic system-services all
+set security zones security-zone LAN interfaces vlan.10 host-inbound-traffic protocols all
+set security zones security-zone WAN description "WAN zone. Interfaces exposed to external network traffic."
+set security zones security-zone WAN screen WAN
+set security zones security-zone WAN interfaces lo0.0 host-inbound-traffic system-services ping
+set security zones security-zone WAN interfaces fe-0/0/0.0 host-inbound-traffic system-services dhcp
+set security zones security-zone WAN interfaces fe-0/0/0.0 host-inbound-traffic system-services ping
+set firewall family inet filter protect-re term synflood-protect from source-prefix-list ipv4-interfaces
+set firewall family inet filter protect-re term synflood-protect from protocol tcp
+set firewall family inet filter protect-re term synflood-protect from tcp-flags "(syn & !ack) | fin | rst"
+set firewall family inet filter protect-re term synflood-protect then policer limit-100k
+set firewall family inet filter protect-re term synflood-protect then count synflood-protect
+set firewall family inet filter protect-re term synflood-protect then accept
+set firewall family inet filter protect-re term allow-ssh from source-prefix-list private-ipv4
+set firewall family inet filter protect-re term allow-ssh from protocol tcp
+set firewall family inet filter protect-re term allow-ssh from destination-port ssh
+set firewall family inet filter protect-re term allow-ssh then policer limit-1m
+set firewall family inet filter protect-re term allow-ssh then count allow-ssh
+set firewall family inet filter protect-re term allow-ssh then accept
+set firewall family inet filter protect-re term allow-snmp from source-prefix-list snmp-servers
+set firewall family inet filter protect-re term allow-snmp from protocol udp
+set firewall family inet filter protect-re term allow-snmp from destination-port snmp
+set firewall family inet filter protect-re term allow-snmp then policer limit-1m
+set firewall family inet filter protect-re term allow-snmp then count allow-snmp
+set firewall family inet filter protect-re term allow-snmp then accept
+set firewall family inet filter protect-re term allow-ntp from source-prefix-list ntp-servers
+set firewall family inet filter protect-re term allow-ntp from source-prefix-list localhost
+set firewall family inet filter protect-re term allow-ntp from protocol udp
+set firewall family inet filter protect-re term allow-ntp from destination-port ntp
+set firewall family inet filter protect-re term allow-ntp then policer limit-32k
+set firewall family inet filter protect-re term allow-ntp then count allow-ntp
+set firewall family inet filter protect-re term allow-ntp then accept
+set firewall family inet filter protect-re term icmp-frags from is-fragment
+set firewall family inet filter protect-re term icmp-frags from protocol icmp
+set firewall family inet filter protect-re term icmp-frags then count icmp-frags
+set firewall family inet filter protect-re term icmp-frags then syslog
+set firewall family inet filter protect-re term icmp-frags then discard
+set firewall family inet filter protect-re term allow-icmp from protocol icmp
+set firewall family inet filter protect-re term allow-icmp from icmp-type echo-request
+set firewall family inet filter protect-re term allow-icmp from icmp-type echo-reply
+set firewall family inet filter protect-re term allow-icmp from icmp-type unreachable
+set firewall family inet filter protect-re term allow-icmp from icmp-type time-exceeded
+set firewall family inet filter protect-re term allow-icmp then policer limit-1m
+set firewall family inet filter protect-re term allow-icmp then count allow-icmp
+set firewall family inet filter protect-re term allow-icmp then accept
+set firewall family inet filter protect-re term allow-traceroute from protocol udp
+set firewall family inet filter protect-re term allow-traceroute from destination-port 33434-33523
+set firewall family inet filter protect-re term allow-traceroute then policer limit-1m
+set firewall family inet filter protect-re term allow-traceroute then count allow-traceroute
+set firewall family inet filter protect-re term allow-traceroute then accept
+set firewall family inet filter protect-re term tcp-established from protocol tcp
+set firewall family inet filter protect-re term tcp-established from source-port ssh
+set firewall family inet filter protect-re term tcp-established from tcp-established
+set firewall family inet filter protect-re term tcp-established then policer limit-10m
+set firewall family inet filter protect-re term tcp-established then count tcp-established
+set firewall family inet filter protect-re term tcp-established then accept
+set firewall family inet filter protect-re term allow-dns from source-prefix-list dns-servers
+set firewall family inet filter protect-re term allow-dns from destination-prefix-list loopback
+set firewall family inet filter protect-re term allow-dns from protocol udp
+set firewall family inet filter protect-re term allow-dns from port 53
+set firewall family inet filter protect-re term allow-dns then policer limit-1m
+set firewall family inet filter protect-re term allow-dns then count allow-dns
+set firewall family inet filter protect-re term allow-dns then accept
+set firewall family inet filter protect-re term allow-dhcp from port dhcp
+set firewall family inet filter protect-re term allow-dhcp from interface fe-0/0/0.0
+set firewall family inet filter protect-re term allow-dhcp then policer limit-1m
+set firewall family inet filter protect-re term allow-dhcp then count allow-dhcp
+set firewall family inet filter protect-re term allow-dhcp then accept
+set firewall family inet filter protect-re term allow-dhcp-clients from port dhcp
+set firewall family inet filter protect-re term allow-dhcp-clients from interface vlan.10
+set firewall family inet filter protect-re term allow-dhcp-clients then accept
+set firewall family inet filter protect-re term default-deny then count default-deny
+set firewall family inet filter protect-re term default-deny then log
+set firewall family inet filter protect-re term default-deny then syslog
+set firewall family inet filter protect-re term default-deny then discard
+set firewall policer limit-10m if-exceeding bandwidth-limit 10m
+set firewall policer limit-10m if-exceeding burst-size-limit 625k
+set firewall policer limit-10m then discard
+set firewall policer limit-3m if-exceeding bandwidth-limit 3m
+set firewall policer limit-3m if-exceeding burst-size-limit 15k
+set firewall policer limit-3m then discard
+set firewall policer limit-1m if-exceeding bandwidth-limit 1m
+set firewall policer limit-1m if-exceeding burst-size-limit 15k
+set firewall policer limit-1m then discard
+set firewall policer limit-100k if-exceeding bandwidth-limit 100k
+set firewall policer limit-100k if-exceeding burst-size-limit 15k
+set firewall policer limit-100k then discard
+set firewall policer limit-32k if-exceeding bandwidth-limit 32k
+set firewall policer limit-32k if-exceeding burst-size-limit 15k
+set firewall policer limit-32k then discard
+set services rpm probe Router-1-to-WAN test WAN probe-type icmp-ping
+set services rpm probe Router-1-to-WAN test WAN target address 8.8.8.8
+set services rpm probe Router-1-to-WAN test WAN probe-count 15
+set services rpm probe Router-1-to-WAN test WAN probe-interval 1
+set services rpm probe Router-1-to-WAN test WAN test-interval 300
+set services rpm probe Router-1-to-WAN test WAN hardware-timestamp
+set services rpm probe Router-1-to-WAN test WAN one-way-hardware-timestamp
+set applications application tcp80 protocol tcp
+set applications application tcp80 destination-port 80
+set applications application tcp22 protocol tcp
+set applications application tcp22 destination-port 22
+set vlans VLAN10 description "User data VLAN"
+set vlans VLAN10 vlan-id 10
+set vlans VLAN10 l3-interface vlan.10
