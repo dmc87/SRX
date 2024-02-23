@@ -1,4 +1,4 @@
-set system host-name Router-1
+set system host-name R1
 set system auto-snapshot
 set system time-zone Australia/Sydney
 set system internet-options tcp-drop-synfin-set
@@ -58,18 +58,17 @@ set system ntp server 129.6.15.27
 set system ntp server 129.6.15.28
 set system ntp server 129.6.15.29
 set system ntp server 129.6.15.30
-set interfaces interface-range VLAN10-MEMBERS description "VLAN10 user"
 set interfaces interface-range VLAN10-MEMBERS member-range fe-0/0/1 to fe-0/0/7
+set interfaces interface-range VLAN10-MEMBERS description "VLAN10 user"
 set interfaces interface-range VLAN10-MEMBERS unit 0 family ethernet-switching port-mode access
 set interfaces interface-range VLAN10-MEMBERS unit 0 family ethernet-switching vlan members VLAN10
 set interfaces fe-0/0/0 description "WAN uplink to NBN gateway"
 set interfaces fe-0/0/0 unit 0 family inet dhcp
-set interfaces lo0 unit 0 description "Loopback"
+set interfaces lo0 unit 0 description Loopback
 set interfaces lo0 unit 0 family inet filter input protect-re
 set interfaces lo0 unit 0 family inet address 192.168.100.1/32
 set interfaces vlan unit 10 description "VLAN10 L3 interface"
 set interfaces vlan unit 10 family inet address 192.168.0.1/24
-set routing-options rib inet.0 static route 0.0.0.0/0 next-hop 10.0.0.1
 set routing-options router-id 192.168.100.1
 set protocols lldp interface all
 set protocols rstp interface all edge
@@ -123,12 +122,11 @@ set security screen ids-option WAN tcp tcp-sweep threshold 1000000
 set security screen ids-option WAN udp flood threshold 2048
 set security screen ids-option WAN udp udp-sweep threshold 1000000
 set security screen ids-option WAN limit-session source-ip-based 1000
-set security nat source pool GATEWAY address 10.0.0.1/32
 set security nat source rule-set source-nat from routing-instance default
 set security nat source rule-set source-nat to zone WAN
 set security nat source rule-set source-nat rule PERMIT-ALL match source-address 0.0.0.0/0
 set security nat source rule-set source-nat rule PERMIT-ALL match destination-address 0.0.0.0/0
-set security nat source rule-set source-nat rule PERMIT-ALL then source-nat pool GATEWAY
+set security nat source rule-set source-nat rule PERMIT-ALL then source-nat interface
 set security policies from-zone LAN to-zone WAN policy LAN-to-WAN description "Permit all LAN to WAN traffic by default"
 set security policies from-zone LAN to-zone WAN policy LAN-to-WAN match source-address any
 set security policies from-zone LAN to-zone WAN policy LAN-to-WAN match destination-address any
