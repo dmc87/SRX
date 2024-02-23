@@ -10,9 +10,7 @@ I've made available a collection of Juniper SRX baseline configurations for vari
 4. The admin user password is 'Password123' Change it from the top of the configuration ( [edit] ) using "set system login user admin authentication plain-text-password" hit enter, and put a new password in.
 5. The DHCP pool for this configuration is 192.168.0.0/24, if that conflicts with your gateway, then change it here, and under "vlan unit 10".
 6. VLAN10 is a user data VLAN which is extended to all interfaces except fe-0/0/0.
-7. You'll need to set the static route to something else other than 10.0.0.1 - I used this as a placeholder, but it needs to be set to whatever DHCP address you get on fe-0/0/0.
-8. If you are sitting this behind a gateway, for example a Telstra smart modem or something, which assigns a dhcp address in the 10.0.0.0/24 range, you'll need to add it to the private-ipv4 prefix list. e.g., "set policy-options prefix-list private-ipv4 10.0.0.0/24".
-9. Again, you'll need to make the "set security nat source pool GATEWAY address 10.0.0.1/32" match your actual gateway address assigned on fe-0/0/0.
+7. If you are sitting this behind a gateway, for example a Telstra smart modem or something, which assigns a dhcp address in the 10.0.0.0/24 range, you'll need to add it to the private-ipv4 prefix list. e.g., "set policy-options prefix-list private-ipv4 10.0.0.0/24".
 
 **Features:** This configuration is equipped with the following features:
 1. As long as you change any variables mentioned above, it should work out of the box.
